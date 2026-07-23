@@ -4,7 +4,6 @@ import { LocationState } from "./types";
 export const history = createHashHistory();
 
 export const navigate = (to: string, { state, replace = false }: { state?: any; replace?: boolean } = {}) => {
-    console.log("navigate called:", to, replace, state);
     const currentState = history.location.state as LocationState | null;
     const i = state?.i !== undefined ? state.i : (currentState?.i ?? 1);
     replace ? history.replace(to, { ...state, i: i }) : history.push(to, { ...state, i: i + 1 });
@@ -30,17 +29,14 @@ export function subscribe(callback: () => void) {
                 newRecords.pop();
                 newRecords.push(location);
             } else if (action === Action.Push) {
-                console.log("PUSH action, new state:", location.state);
                 newRecords.push(location);
             } else if (action === Action.Pop) {
-                console.log("POP action");
                 // 前进或后退时 records的数量应该等于state.i
                 newRecords.length = state.i;
                 // records最后一项填入page,前进或后退可能会跨多个record
                 newRecords[newRecords.length - 1] = location;
             }
             records = newRecords;
-            console.log("Notifying listeners, count:", listeners.v.length);
             // 复制一份数组避免在遍历时发生 unmount 导致的原数组修改问题
             [...listeners.v].forEach((cb) => cb());
         });

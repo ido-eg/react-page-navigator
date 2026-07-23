@@ -27,8 +27,6 @@ export default function Navigator({ routes: initialRoutes }: NavigatorProps) {
                     const path = parent.path ? (parent.path + route.path) : route.path;
                     // pathname 是嵌套路由所匹配的段，也是当前路由应该所在的段
                     let [matched, , pathname] = matchRoute(parser, path, record.pathname, !!route.children) as unknown as [boolean, any, string];
-                    console.log(`Checking route: ${path} against ${record.pathname} -> matched: ${matched}`);
-                    // 找到第一个匹配到的route
                     if (matched) {
                         let target = list.find((item) => item.key === path);
                         if (!target) {

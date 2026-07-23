@@ -15,8 +15,7 @@ export default function Outlet() {
             const Render = item.component;
             return (
                 <Route key={item.key} path={item.path}>
-                    {(params) => {
-                        console.log("wouter matched child!", item.path, params);
+                    {() => {
                         return (
                             <RouteProvider inactive={index !== arr.length - 1} route={item}>
                                 <Render />
