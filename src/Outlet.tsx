@@ -5,17 +5,24 @@ import RouteContext from "./RouteContext";
 
 export default function Outlet() {
     const route = useContext(RouteContext);
+    if (!route) return null;
     const list = route.children;
+    
     return (
         list &&
         list.length !== 0 &&
-        list.map((item, index, arr) => {
+        list.map((item: any, index: number, arr: any[]) => {
             const Render = item.component;
             return (
                 <Route key={item.key} path={item.path}>
-                    <RouteProvider inactive={index !== arr.length - 1} route={item}>
-                        <Render />
-                    </RouteProvider>
+                    {(params) => {
+                        console.log("wouter matched child!", item.path, params);
+                        return (
+                            <RouteProvider inactive={index !== arr.length - 1} route={item}>
+                                <Render />
+                            </RouteProvider>
+                        );
+                    }}
                 </Route>
             );
         })
