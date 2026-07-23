@@ -1,9 +1,6 @@
 import React, { useCallback, useSyncExternalStore } from "react";
 import { Router } from "wouter";
-import { navigate } from "./store";
-import { createHashHistory } from "history";
-
-const history = createHashHistory();
+import { history, navigate } from "./store";
 
 const listeners: { v: Array<() => void> } = { v: [] };
 let unlisten: (() => void) | undefined;
@@ -34,19 +31,21 @@ const unescape = (str: string) => {
     }
 };
 
-// 固定路由地址显示
+// 固定路由地址显示（pathname 冻在进入时的 location，search 跟主 history）
 export default function Record(props: { path: string; children: React.ReactNode }) {
-    const hook = useCallback((_router: any) => {
-        return [props.path, navigate] as [string, typeof navigate];
-    }, [props.path]);
-    
-    // 从 history 同步获取 search 参数，这样组件在 search 变化时会重新渲染
+    const hook = useCallback(
+        (_router: any) => {
+            return [props.path, navigate] as [string, typeof navigate];
+        },
+        [props.path],
+    );
+
     const currentSearch = useSyncExternalStore(subscribeToSearch, getSearch);
-    
+
     const searchHook = useCallback(() => {
         return unescape(stripQm(currentSearch));
     }, [currentSearch]);
-    
+
     return (
         <Router hook={hook} searchHook={searchHook}>
             {props.children}
