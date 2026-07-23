@@ -5,8 +5,8 @@ import NavigatorContext from "./NavigatorContext";
 import Record from "./Record";
 import RouteProvider from "./RouteProvider";
 
-export default function Navigator({ routes: initilyRoutes }) {
-    const [routes] = useState(() => initilyRoutes);
+export default function Navigator({ routes: initialRoutes }) {
+    const [routes] = useState(() => initialRoutes);
 
     const records = useSyncExternalStore(subscribe, getSnapshot);
     const { parser } = useRouter();
@@ -59,5 +59,5 @@ export default function Navigator({ routes: initilyRoutes }) {
     }, [records, routes, parser]);
 
     const ctx = useMemo(() => ({}), []);
-    return <NavigatorContext.Provider value={ctx}>{children}</NavigatorContext.Provider>;
+    return <NavigatorContext value={ctx}>{children}</NavigatorContext>;
 }
